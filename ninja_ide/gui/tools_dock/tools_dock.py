@@ -31,7 +31,7 @@ from PyQt4.QtGui import QKeySequence
 from PyQt4.QtCore import QSize
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtWebKit import QWebPage
+#from PyQt4.QtWebKit import QWebPage
 
 from ninja_ide.core import settings
 from ninja_ide.core.file_handling import file_manager
@@ -239,8 +239,8 @@ class _ToolsDock(QWidget):
             web_inspector = IDE.get_service('web_inspector')
             if web_inspector:
                 web_inspector.set_inspection_page(self._web.webFrame.page())
-                self._web.webFrame.triggerPageAction(
-                    QWebPage.InspectElement, True)
+                #self._web.webFrame.triggerPageAction(
+                #    QWebPage.InspectElement, True)
                 web_inspector.refresh_inspector()
         self._web.setFocus()
 

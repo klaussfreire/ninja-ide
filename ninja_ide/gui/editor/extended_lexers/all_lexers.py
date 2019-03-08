@@ -37,7 +37,7 @@ from PyQt4.Qsci import (QsciLexerBash, QsciLexerBatch,
                         QsciLexerPython, QsciLexerRuby, QsciLexerSQL,
                         QsciLexerSpice, QsciLexerTCL, QsciLexerTeX,
                         QsciLexerVHDL, QsciLexerVerilog, QsciLexerXML,
-                        QsciLexerYAML)
+                        QsciLexerYAML, QsciLexerCustom, QsciStyle)
 
 from ninja_ide.tools.logger import NinjaLogger
 logger = NinjaLogger('ninja_ide.gui.editor.extended_lexers.all_lexers')
@@ -125,6 +125,25 @@ try:
             super(AVSLexer, self).__init__(*args, **kwargs)
 except ImportError:
     AVSLexer = None
+
+class CustomLexer (BaseNinjaLexer, QsciLexerCustom):
+    def __init__(self, *args, **kwargs):
+        self._settings_colored = None
+        super(CustomLexer, self).__init__(*args, **kwargs)
+
+        self._text_style = QsciStyle(
+            -1, "text",
+            QColor(resources.COLOR_SCHEME["Default"]),
+            QColor(resources.COLOR_SCHEME["EditorBackground"]),
+            settings.FONT)
+
+    def styleText(self, start, end):
+        self.startStyling(start)
+        self.setStyling(end - start, self._text_style)
+
+    def description(self, style):
+        return self._text_style.description()
+
 
 class BashLexer (BaseNinjaLexer, QsciLexerBash):
     def __init__(self, *args, **kwargs):
@@ -333,3 +352,13 @@ class YAMLLexer (BaseNinjaLexer, QsciLexerYAML):
     def __init__(self, *args, **kwargs):
         self._settings_colored = None
         super(YAMLLexer, self).__init__(*args, **kwargs)
+
+try:
+    from PyQt4.Qsci import QsciLexerMarkdown
+    class MarkdownLexer (BaseNinjaLexer, QsciLexerMarkdown):
+        def __init__(self, *args, **kwargs):
+            self._settings_colored = None
+            super(MarkdownLexer, self).__init__(*args, **kwargs)
+except ImportError:
+    MarkdownLexer = None
+

@@ -24,7 +24,7 @@ from PyQt4.QtGui import QVBoxLayout
 from PyQt4.QtCore import Qt
 from PyQt4.QtCore import QUrl
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtWebKit import QWebView
+#from PyQt4.QtWebKit import QWebView
 
 from ninja_ide.core.file_handling import file_manager
 
@@ -46,10 +46,10 @@ class BrowserWidget(QWidget):
         self._process = process
         vbox = QVBoxLayout(self)
         #Web Frame
-        self.webFrame = QWebView(self)
-        self.webFrame.setAcceptDrops(False)
+        #self.webFrame = QWebView(self)
+        #self.webFrame.setAcceptDrops(False)
 
-        self.webFrame.load(QUrl(url))
+        #self.webFrame.load(QUrl(url))
 
         vbox.addWidget(self.webFrame)
 

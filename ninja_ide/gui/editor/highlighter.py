@@ -27,7 +27,7 @@ from ninja_ide.gui.editor.extended_lexers.all_lexers import (
     JavaScriptLexer, LuaLexer, MakefileLexer, MatlabLexer, OctaveLexer, POLexer,
     POVLexer, PascalLexer, PerlLexer, PostScriptLexer, PropertiesLexer,
     RubyLexer, SQLLexer, SpiceLexer, TCLLexer, TeXLexer, VHDLLexer,
-    VerilogLexer, XMLLexer, YAMLLexer)
+    VerilogLexer, XMLLexer, YAMLLexer, MarkdownLexer, CustomLexer)
 
 from ninja_ide.tools.logger import NinjaLogger
 logger = NinjaLogger('ninja_ide.gui.editor.highlighter')
@@ -70,6 +70,9 @@ LEXERS = {
     "verilog": VerilogLexer,
     "xml": XMLLexer,
     "yaml": YAMLLexer,
+    "md": MarkdownLexer,
+    "rst": MarkdownLexer,
+    None: CustomLexer,
 }
 
 LEXER_MAP = {
@@ -116,6 +119,7 @@ LEXER_MAP = {
     "rst": "rst",
     "c": "c",
     "java": "java",
+    "md": "markdown",
 }
 
 BUILT_LEXERS = {
@@ -137,7 +141,7 @@ def build_lexer(lang):
     Lexer = BUILT_LEXERS.get(lang, None)
 
     if Lexer is None:
-        Lexer = LEXERS.get(lang, None)
+        Lexer = LEXERS.get(lang, LEXERS.get(None))
         if Lexer is not None:
             lex = Lexer()
             lex.initialize_color_scheme()

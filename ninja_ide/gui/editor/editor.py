@@ -97,6 +97,7 @@ class Editor(QsciScintilla):
             resources.CUSTOM_SCHEME.get(
                 'Caret',
                 resources.COLOR_SCHEME['Caret']))
+        self.setUtf8(True)
         self.setCaretLineBackgroundColor(line_color)
         self.setCaretForegroundColor(caretColor)
         self.setBraceMatching(QsciScintilla.StrictBraceMatch)
@@ -434,6 +435,8 @@ class Editor(QsciScintilla):
         painted_lines = []
         for items in checkers:
             checker, color, _ = items
+            if color.startswith('#'):
+                color = color[1:]
             lines = list(checker.checks.keys())
             # Set current
             self.SendScintilla(QsciScintilla.SCI_SETINDICATORCURRENT,
@@ -788,6 +791,9 @@ class Editor(QsciScintilla):
             line, index = self._cursor_line, self._cursor_index
         found = self.findFirst(expr, reg, cs, wo, wrap, forward, line, index)
         if found:
+            # otherwise focusInEvent will screw click behavior
+            self._first_visible_line = 0
+
             self.highlight_selected_word(expr, case_sensitive=cs)
             return self._get_find_index_result(expr, cs, wo)
         else:
@@ -864,8 +870,10 @@ class Editor(QsciScintilla):
             self.setCursorPosition(line, index)
         if selected:
             self.setSelection(line, index, lto, ito)
-        self.SendScintilla(QsciScintilla.SCI_SETFIRSTVISIBLELINE,
-                           self._first_visible_line)
+        if self._first_visible_line:
+            self.SendScintilla(QsciScintilla.SCI_SETFIRSTVISIBLELINE,
+                               self._first_visible_line)
+            self._first_visible_line = 0
 
     def focusOutEvent(self, event):
         """Hide Popup on focus lost."""

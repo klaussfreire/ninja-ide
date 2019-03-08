@@ -190,6 +190,7 @@ class NenvEggSearcher(QObject):
         iterates over pip installed packages, local and not local
         returns tuples version, name
         """
+        return
         for each_distribution in get_installed_distributions():
             yield each_distribution.version, each_distribution.key
 
